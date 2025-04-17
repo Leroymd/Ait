@@ -1,0 +1,20 @@
+[
+  {
+    "id": "example-position-1",
+    "symbol": "ETHUSDT",
+    "direction": "LONG",
+    "openPrice": 3120.5,
+    "amount": 0.25,
+    "openTime": "2025-04-09T12:20:18.000Z",
+    "stopLoss": 3055.2,
+    "takeProfit": 3245.7,
+    "orderType": "MARKET",
+    "status": "OPEN",
+    "unrealizedProfit": 1.2,
+    "source": "AI_SIGNAL",
+    "isExample": true,
+    "currentPrice": null,
+    "profit": null,
+    "profitPercent": null
+  }
+]

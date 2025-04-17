@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Позиции | Торговая платформа с AI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="positions-header">
+      <h1>Управление позициями</h1>
+      <div class="header-actions">
+        <a href="index.html" class="btn btn-secondary">Вернуться к торговле</a>
+        <a href="analytics.html" class="btn btn-secondary">Аналитика</a>
+        <button id="refreshPositions" class="btn btn-primary">Обновить</button>
+      </div>
+    </header>
+
+    <div id="loadingIndicator" class="loading-indicator hidden">
+      <div class="spinner"></div>
+      <p>Загрузка данных...</p>
+    </div>
+
+    <div id="errorMessage" class="error-message hidden"></div>
+    <div id="successMessage" class="success-message hidden"></div>
+
+    <div class="positions-container">
+      <div class="positions-tabs">
+        <div class="positions-tab active" data-section="active">Активные позиции</div>
+        <div class="positions-tab" data-section="history">История позиций</div>
+        <div class="positions-tab" data-section="orders">Открытые ордера</div>
+      </div>
+
+      <div class="positions-content">
+        <!-- Секция активных позиций -->
+        <div id="active" class="positions-section">
+          <div class="section-header">
+            <h2>Активные позиции</h2>
+            <div class="section-actions">
+              <button id="closeAllPositions" class="btn btn-danger">Закрыть все</button>
+              <button id="addPosition" class="btn btn-success">Новая позиция</button>
+            </div>
+          </div>
+          
+          <div class="positions-summary">
+            <div class="summary-item">
+              <span class="summary-label">Всего позиций:</span>
+              <span id="totalActivePositions" class="summary-value">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Общий объём:</span>
+              <span id="totalPositionsValue" class="summary-value">0 USDT</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Текущий PnL:</span>
+              <span id="totalPnL" class="summary-value">0 USDT</span>
+            </div>
+          </div>
+          
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Пара</th>
+                  <th>Тип</th>
+                  <th>Размер</th>
+                  <th>Цена входа</th>
+                  <th>Текущая цена</th>
+                  <th>PnL</th>
+                  <th>PnL %</th>
+                  <th>Время открытия</th>
+                  <th>SL/TP</th>
+                  <th>Действия</th>
+                </tr>
+              </thead>
+              <tbody id="activePositionsBody">
+                <!-- Данные будут добавлены динамически -->
+                <tr>
+                  <td colspan="10" class="empty-data">Нет открытых позиций</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Секция истории позиций -->
+        <div id="history" class="positions-section hidden">
+          <div class="section-header">
+            <h2>История позиций</h2>
+            <div class="section-actions">
+              <div class="filter-group">
+                <label for="historyPair">Пара:</label>
+                <select id="historyPair">
+                  <option value="all">Все пары</option>
+                  <!-- Опции будут добавлены динамически -->
+                </select>
+              </div>
+              <div class="filter-group">
+                <label for="historyPeriod">Период:</label>
+                <select id="historyPeriod">
+                  <option value="day">День</option>
+                  <option value="week">Неделя</option>
+                  <option value="month" selected>Месяц</option>
+                  <option value="3months">3 месяца</option>
+                  <option value="all">Все время</option>
+                </select>
+              </div>
+              <button id="exportHistory" class="btn btn-secondary">Экспорт</button>
+            </div>
+          </div>
+          
+          <div class="positions-summary">
+            <div class="summary-item">
+              <span class="summary-label">Всего сделок:</span>
+              <span id="totalHistoryPositions" class="summary-value">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Прибыльных:</span>
+              <span id="profitablePositions" class="summary-value">0 (0%)</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Убыточных:</span>
+              <span id="unprofitablePositions" class="summary-value">0 (0%)</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Общий результат:</span>
+              <span id="totalHistoryPnL" class="summary-value">0 USDT</span>
+            </div>
+          </div>
+          
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Пара</th>
+                  <th>Тип</th>
+                  <th>Размер</th>
+                  <th>Цена входа</th>
+                  <th>Цена выхода</th>
+                  <th>PnL</th>
+                  <th>PnL %</th>
+                  <th>Время открытия</th>
+                  <th>Время закрытия</th>
+                  <th>Длительность</th>
+                  <th>Источник</th>
+                </tr>
+              </thead>
+              <tbody id="historyPositionsBody">
+                <!-- Данные будут добавлены динамически -->
+                <tr>
+                  <td colspan="11" class="empty-data">Нет истории позиций</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination">
+            <button id="prevPage" class="btn btn-secondary" disabled>&laquo; Назад</button>
+            <span id="pageInfo">Страница 1 из 1</span>
+            <button id="nextPage" class="btn btn-secondary" disabled>Вперед &raquo;</button>
+          </div>
+        </div>
+
+        <!-- Секция открытых ордеров -->
+        <div id="orders" class="positions-section hidden">
+          <div class="section-header">
+            <h2>Открытые ордера</h2>
+            <div class="section-actions">
+              <button id="cancelAllOrders" class="btn btn-danger">Отменить все</button>
+              <button id="addOrder" class="btn btn-success">Новый ордер</button>
+            </div>
+          </div>
+          
+          <div class="positions-summary">
+            <div class="summary-item">
+              <span class="summary-label">Всего ордеров:</span>
+              <span id="totalOrders" class="summary-value">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Лимитных:</span>
+              <span id="limitOrders" class="summary-value">0</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Стоп-ордеров:</span>
+              <span id="stopOrders" class="summary-value">0</span>
+            </div>
+          </div>
+          
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Пара</th>
+                  <th>Тип</th>
+                  <th>Сторона</th>
+                  <th>Цена</th>
+                  <th>Количество</th>
+                  <th>Сумма</th>
+                  <th>Время создания</th>
+                  <th>Статус</th>
+                  <th>Действия</th>
+                </tr>
+              </thead>
+              <tbody id="ordersBody">
+                <!-- Данные будут добавлены динамически -->
+                <tr>
+                  <td colspan="9" class="empty-data">Нет открытых ордеров</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно для создания новой позиции -->
+    <div id="newPositionModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Новая позиция</h3>
+          <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+          <form id="newPositionForm">
+            <div class="form-group">
+              <label for="positionPair">Торговая пара:</label>
+              <select id="positionPair" required>
+                <!-- Опции будут добавлены динамически -->
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label>Направление:</label>
+              <div class="radio-group">
+                <label>
+                  <input type="radio" name="positionDirection" value="LONG" checked>
+                  Long
+                </label>
+                <label>
+                  <input type="radio" name="positionDirection" value="SHORT">
+                  Short
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="positionSize">Размер позиции:</label>
+              <div class="input-with-buttons">
+                <input type="number" id="positionSize" min="0" step="0.001" required>
+                <div class="size-buttons">
+                  <button type="button" data-size="25">25%</button>
+                  <button type="button" data-size="50">50%</button>
+                  <button type="button" data-size="75">75%</button>
+                  <button type="button" data-size="100">100%</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="positionPrice">Цена входа:</label>
+              <input type="number" id="positionPrice" min="0" step="0.00000001" required>
+              <small>Оставьте пустым для рыночной цены</small>
+            </div>
+            
+            <div class="form-group">
+              <label for="positionStopLoss">Стоп-лосс:</label>
+              <input type="number" id="positionStopLoss" min="0" step="0.00000001">
+              <div class="input-with-buttons">
+                <label for="positionStopLossPercent">Процент:</label>
+                <input type="number" id="positionStopLossPercent" min="0" max="100" step="0.1">
+                <span>%</span>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="positionTakeProfit">Тейк-профит:</label>
+              <input type="number" id="positionTakeProfit" min="0" step="0.00000001">
+              <div class="input-with-buttons">
+                <label for="positionTakeProfitPercent">Процент:</label>
+                <input type="number" id="positionTakeProfitPercent" min="0" max="100" step="0.1">
+                <span>%</span>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label>Тип исполнения:</label>
+              <div class="radio-group">
+                <label>
+                  <input type="radio" name="positionType" value="MARKET" checked>
+                  Рыночный
+                </label>
+                <label>
+                  <input type="radio" name="positionType" value="LIMIT">
+                  Лимитный
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <div class="checkbox-group">
+                <label>
+                  <input type="checkbox" id="positionUseTrailingStop">
+                  Использовать трейлинг-стоп
+                </label>
+              </div>
+              <div class="input-with-label" id="trailingStopBlock" style="display: none;">
+                <label for="positionTrailingStopPercent">Активация при:</label>
+                <input type="number" id="positionTrailingStopPercent" min="0" max="100" step="0.1" value="1.0">
+                <span>%</span>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button id="cancelPosition" class="btn btn-secondary">Отмена</button>
+          <button id="createPosition" class="btn btn-primary">Создать</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="positions.js"></script>
+</body>
+</html>

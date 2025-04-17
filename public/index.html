@@ -1,0 +1,342 @@
+!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Trading Platform</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="d-flex align-items-center mb-3">
+        <img src="logo.png" alt="Logo" class="me-2" width="30" height="30" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzNDk4ZGIiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTIgMjJzOC0zIDgtMTBWNWwtOC0yLTggMnY3YzAgNyA4IDEwIDggMTB6Ii8+PC9zdmc+'" />
+        <h4 class="mb-0">TradingBot</h4>
+      </div>
+      
+      <hr>
+      
+      <!-- Exchange selection -->
+      <div class="mb-3">
+        <label for="exchange-select" class="form-label">Exchange</label>
+        <select id="exchange-select" class="form-select">
+          <option value="binance">Binance</option>
+          <option value="bybit">Bybit</option>
+          <option value="bybit">MEXC</option>
+          <option value="bybit">BIDGET</option>
+		  
+        </select>
+      </div>
+	  <!-- Выбор типа рынка -->
+<div class="mb-3">
+  <label class="form-label">Тип рынка</label>
+  <div class="btn-group w-100" role="group">
+    <button type="button" class="btn btn-outline-primary market-type-btn" data-type="spot">Spot</button>
+    <button type="button" class="btn btn-outline-primary market-type-btn active" data-type="futures">Futures</button>
+  </div>
+</div>
+      
+      <!-- Trading Pair Selection -->
+<div class="trading-pair-container mb-3">
+  <label for="pair-select" class="form-label">Trading Pair</label>
+  <input type="text" id="pair-search" placeholder="Search pair..." class="form-control mb-2" />
+  <div class="d-flex align-items-center">
+    <select id="pair-select" class="form-select flex-grow-1"></select>
+    <button id="refresh-pairs" class="btn btn-outline-secondary ms-2">
+      <i class="bi bi-arrow-repeat"></i>
+    </button>
+    <span id="loading-spinner" class="ms-2" style="display:none;">
+      <div class="spinner-border spinner-border-sm text-primary"></div>
+    </span>
+  </div>
+</div>
+      
+      <!-- Time interval buttons -->
+      <div class="mb-3">
+        <label class="form-label">Interval</label>
+        <div class="btn-group w-100" role="group">
+          <button type="button" class="btn btn-outline-primary interval-btn" data-interval="1m">1m</button>
+          <button type="button" class="btn btn-outline-primary interval-btn" data-interval="5m">5m</button>
+		  <button type="button" class="btn btn-outline-primary interval-btn active" data-interval="15m">15m</button>
+          <button type="button" class="btn btn-outline-primary interval-btn" data-interval="1h">1h</button>
+          <button type="button" class="btn btn-outline-primary interval-btn" data-interval="1d">1d</button>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <!-- Active modules -->
+      <div class="mb-3">
+        <h6>Modules</h6>
+        <div id="modules-list" class="list-group">
+          <div class="list-group-item d-flex justify-content-between align-items-center">
+            <span>Core</span>
+            <span class="badge bg-success">Active</span>
+          </div>
+        </div>
+      </div>
+      
+      <hr>
+      
+      <!-- Settings -->
+      <div class="mb-3">
+        <button id="settings-btn" class="btn btn-outline-secondary w-100">
+          <i class="bi bi-gear"></i> Settings
+        </button>
+      </div>
+    </div>
+    
+    <!-- Main content -->
+    <div class="main-content w-100">
+      <!-- Top navigation -->
+      <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="analytics.html">Analysis</a></li>
+        <li class="nav-item"><a class="nav-link" href="positions.html">Positions</a></li>
+        <li class="nav-item"><a class="nav-link" href="settings.html">Settings</a></li>
+      </ul>
+
+      <!-- Title and analyze button -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 id="current-pair">BTCUSDT</h4>
+        <button id="analyze-btn" class="btn btn-primary" disabled>
+          <i class="bi bi-graph-up"></i> Analyze
+        </button>
+      </div>
+      
+     <!-- Chart -->
+<div class="row mb-3">
+  <div class="col-12">
+    <div id="trading-chart" class="chart-container">
+      <div class="text-center py-5" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading chart...</p>
+      </div>
+    </div>
+  </div>
+</div>
+      <!-- Analysis results and signals -->
+      <div class="row">
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Analysis</h5>
+              <span id="analysis-timestamp" class="text-muted">-</span>
+            </div>
+            <div class="card-body">
+              <div id="analysis-placeholder" class="text-center py-4">
+                <p class="text-muted">Click "Analyze" button to get a signal</p>
+              </div>
+              <div id="analysis-content" class="d-none">
+                <div class="row">
+                  <div class="col-md-6">
+                    <img id="analysis-screenshot" src="" alt="Chart" class="img-fluid border rounded">
+                  </div>
+                  <div class="col-md-6">
+                    <h6>Analysis Result:</h6>
+                    <p id="analysis-text"></p>
+                    <hr>
+                    <h6>Confidence Level:</h6>
+                    <div class="progress mb-3">
+                      <div id="confidence-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">Trading Signal</h5>
+            </div>
+            <div class="card-body">
+              <div id="signal-placeholder" class="text-center py-4">
+                <p class="text-muted">No signal generated yet</p>
+              </div>
+              <div id="signal-content" class="d-none">
+                <div class="mb-3 text-center">
+                  <span id="signal-direction" class="badge bg-success fs-5 w-100 p-2">BUY</span>
+                </div>
+                <table class="table">
+                  <tr>
+                    <td>Entry</td>
+                    <td id="signal-entry" class="fw-bold text-end">-</td>
+                  </tr>
+                  <tr>
+                    <td>Stop Loss</td>
+                    <td id="signal-stop" class="fw-bold text-end text-danger">-</td>
+                  </tr>
+                  <tr>
+                    <td>Take Profit</td>
+                    <td id="signal-tp" class="fw-bold text-end text-success">-</td>
+                  </tr>
+                </table>
+                <button id="execute-signal-btn" class="btn btn-success w-100">
+                  <i class="bi bi-lightning"></i> Execute Signal
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card mt-3">
+            <div class="card-header">
+              <h5 class="mb-0">Auto Trading</h5>
+            </div>
+            <div class="card-body">
+              <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="auto-trading-switch" disabled>
+                <label class="form-check-label" for="auto-trading-switch">Automatic Execution</label>
+              </div>
+              <p class="text-muted small">Auto trading module not available. Install module in settings.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Settings Modal -->
+  <div class="modal fade" id="settings-modal" tabindex="-1" aria-labelledby="settings-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="settings-modal-label">System Settings</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <ul class="nav nav-tabs" id="settings-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="api-tab" data-bs-toggle="tab" data-bs-target="#api-settings" type="button" role="tab">API Keys</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="modules-tab" data-bs-toggle="tab" data-bs-target="#modules-settings" type="button" role="tab">Modules</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="trading-tab" data-bs-toggle="tab" data-bs-target="#trading-settings" type="button" role="tab">Trading</button>
+            </li>
+          </ul>
+          
+          <div class="tab-content p-3" id="settings-tabs-content">
+            <!-- API Keys Tab -->
+            <div class="tab-pane fade show active" id="api-settings" role="tabpanel" aria-labelledby="api-tab">
+              <h6 class="mb-3">Binance API</h6>
+              <div class="mb-3">
+                <label for="binance-api-key" class="form-label">API Key</label>
+                <input type="text" class="form-control" id="binance-api-key">
+              </div>
+              <div class="mb-3">
+                <label for="binance-secret-key" class="form-label">Secret Key</label>
+                <input type="password" class="form-control" id="binance-secret-key">
+              </div>
+              <div class="mb-3">
+                <button id="testBinanceConnection" class="btn btn-outline-secondary">Test Connection</button>
+              </div>
+              
+              <hr>
+              
+              <h6 class="mb-3">Bybit API</h6>
+              <div class="mb-3">
+                <label for="bybit-api-key" class="form-label">API Key</label>
+                <input type="text" class="form-control" id="bybit-api-key">
+              </div>
+              <div class="mb-3">
+                <label for="bybit-secret-key" class="form-label">Secret Key</label>
+                <input type="password" class="form-control" id="bybit-secret-key">
+              </div>
+              <div class="mb-3">
+                <button id="testBybitConnection" class="btn btn-outline-secondary">Test Connection</button>
+              </div>
+              
+              <hr>
+              
+              <h6 class="mb-3">AI API</h6>
+              <div class="mb-3">
+                <label for="ai-api-key" class="form-label">API Key</label>
+                <input type="password" class="form-control" id="ai-api-key">
+              </div>
+              <div class="mb-3">
+                <label for="ai-endpoint" class="form-label">Endpoint</label>
+                <input type="text" class="form-control" id="ai-endpoint" placeholder="https://api.example.com/v1/analyze">
+              </div>
+              <div class="mb-3">
+                <button id="testAiConnection" class="btn btn-outline-secondary">Test Connection</button>
+              </div>
+            </div>
+            
+            <!-- Modules Tab -->
+            <div class="tab-pane fade" id="modules-settings" role="tabpanel" aria-labelledby="modules-tab">
+              <div class="mb-3">
+                <h6>Installed Modules</h6>
+                <div id="installed-modules-list" class="list-group mb-3">
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <strong>Core System</strong>
+                      <p class="mb-0 text-muted small">Core system module</p>
+                    </div>
+                    <span class="badge bg-success">Active</span>
+                  </div>
+                </div>
+                
+                <h6>Install New Module</h6>
+                <div class="input-group mb-3">
+                  <input type="file" class="form-control" id="module-file">
+                  <button class="btn btn-outline-secondary" type="button" id="upload-module-btn">Upload</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Trading Tab -->
+            <div class="tab-pane fade" id="trading-settings" role="tabpanel" aria-labelledby="trading-tab">
+              <h6>Risk Management</h6>
+              <div class="mb-3">
+                <label for="max-risk-percent" class="form-label">Maximum risk per trade (%)</label>
+                <input type="number" class="form-control" id="max-risk-percent" min="0.1" max="10" step="0.1" value="1">
+              </div>
+              
+              <div class="mb-3">
+                <label for="max-concurrent-trades" class="form-label">Maximum concurrent trades</label>
+                <input type="number" class="form-control" id="max-concurrent-trades" min="1" max="10" value="3">
+              </div>
+              
+              <h6>Auto Trading</h6>
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="confirmation-mode-check">
+                <label class="form-check-label" for="confirmation-mode-check">
+                  Manual confirmation mode
+                </label>
+              </div>
+              
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" id="deposit-acceleration-check">
+                <label class="form-check-label" for="deposit-acceleration-check">
+                  Deposit acceleration
+                </label>
+                <small class="form-text text-muted d-block">Automatically increases position size after successful trades</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="save-settings-btn">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Application Scripts (use type="module" for ES modules) -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

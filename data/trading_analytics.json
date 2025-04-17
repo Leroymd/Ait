@@ -1,0 +1,149 @@
+{
+  "pairPerformance": {},
+  "timeDistribution": {
+    "hourly": [
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      },
+      {
+        "count": 0,
+        "totalProfit": 0,
+        "avgProfit": 0
+      }
+    ]
+  },
+  "capitalCurve": [
+    {
+      "timestamp": "1970-01-01T00:00:00.000Z",
+      "capital": 1000,
+      "profit": 0,
+      "drawdown": 0
+    }
+  ],
+  "recommendedPairs": [],
+  "recommendedTimeSlots": [],
+  "overallMetrics": {
+    "totalTrades": 0,
+    "winRate": 0,
+    "avgProfit": 0,
+    "totalProfit": 0,
+    "maxProfit": 0,
+    "maxLoss": 0,
+    "profitFactor": 0,
+    "avgDuration": 0,
+    "maxDrawdown": 0,
+    "sharpeRatio": 0
+  }
+}

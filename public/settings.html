@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Настройки | Торговая платформа с AI</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="settings-header">
+      <h1>Настройки торговой платформы</h1>
+      <div class="header-actions">
+        <a href="index.html" class="btn btn-secondary">Вернуться к торговле</a>
+        <a href="analytics.html" class="btn btn-secondary">Аналитика</a>
+        <button id="saveSettings" class="btn btn-primary">Сохранить настройки</button>
+      </div>
+    </header>
+
+    <div id="loadingIndicator" class="loading-indicator hidden">
+      <div class="spinner"></div>
+      <p>Загрузка настроек...</p>
+    </div>
+
+    <div id="errorMessage" class="error-message hidden"></div>
+    <div id="successMessage" class="success-message hidden"></div>
+
+    <div class="settings-container">
+      <!-- Вкладки настроек -->
+      <div class="settings-tabs">
+        <div class="settings-tab active" data-section="general">Общие</div>
+        <div class="settings-tab" data-section="connections">Подключения</div>
+        <div class="settings-tab" data-section="trading">Торговля</div>
+        <div class="settings-tab" data-section="risk">Риск-менеджмент</div>
+        <div class="settings-tab" data-section="analytics">Аналитика</div>
+        <div class="settings-tab" data-section="notifications">Уведомления</div>
+      </div>
+
+      <div class="settings-content">
+        <!-- Общие настройки -->
+        <div id="general" class="settings-section">
+          <h2>Общие настройки</h2>
+          
+          <div class="settings-group">
+            <h3>Интерфейс</h3>
+            <div class="setting-item">
+              <label for="theme">Тема оформления:</label>
+              <select id="theme" name="theme">
+                <option value="light">Светлая</option>
+                <option value="dark">Тёмная</option>
+                <option value="system">Системная</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="language">Язык:</label>
+              <select id="language" name="language">
+                <option value="ru">Русский</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="compactMode" name="compactMode">
+              <label for="compactMode">Компактный режим</label>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Временные зоны</h3>
+            <div class="setting-item">
+              <label for="timezone">Часовой пояс:</label>
+              <select id="timezone" name="timezone">
+                <option value="UTC">UTC</option>
+                <option value="UTC+3">Москва (UTC+3)</option>
+                <option value="UTC+8">Пекин/Гонконг (UTC+8)</option>
+                <option value="UTC-5">Нью-Йорк (UTC-5)</option>
+                <option value="UTC-8">Лос-Анджелес (UTC-8)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Система</h3>
+            <div class="setting-item">
+              <label for="loggingLevel">Уровень логирования:</label>
+              <select id="loggingLevel" name="loggingLevel">
+                <option value="error">Только ошибки</option>
+                <option value="warning">Предупреждения</option>
+                <option value="info">Информационный</option>
+                <option value="debug">Отладка</option>
+              </select>
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableAutoUpdates" name="enableAutoUpdates" checked>
+              <label for="enableAutoUpdates">Автоматическое обновление данных</label>
+            </div>
+            <div class="setting-item">
+              <label for="updateInterval">Интервал обновления (секунды):</label>
+              <input type="number" id="updateInterval" name="updateInterval" min="5" value="30">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Настройки подключений -->
+        <div id="connections" class="settings-section hidden">
+          <h2>Настройки подключений</h2>
+          
+          <div class="settings-group">
+            <h3>Binance</h3>
+            <div class="setting-item">
+              <label for="binanceApiKey">API Key:</label>
+              <input type="text" id="binanceApiKey" name="binanceApiKey" placeholder="Введите API Key">
+            </div>
+            <div class="setting-item">
+              <label for="binanceSecretKey">Secret Key:</label>
+              <input type="password" id="binanceSecretKey" name="binanceSecretKey" placeholder="Введите Secret Key">
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="binanceTestnet" name="binanceTestnet">
+              <label for="binanceTestnet">Использовать тестовую сеть (Testnet)</label>
+            </div>
+            <div class="setting-item">
+              <button id="testBinanceConnection" class="btn btn-secondary">Проверить соединение</button>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Bybit</h3>
+            <div class="setting-item">
+              <label for="bybitApiKey">API Key:</label>
+              <input type="text" id="bybitApiKey" name="bybitApiKey" placeholder="Введите API Key">
+            </div>
+            <div class="setting-item">
+              <label for="bybitSecretKey">Secret Key:</label>
+              <input type="password" id="bybitSecretKey" name="bybitSecretKey" placeholder="Введите Secret Key">
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="bybitTestnet" name="bybitTestnet">
+              <label for="bybitTestnet">Использовать тестовую сеть (Testnet)</label>
+            </div>
+            <div class="setting-item">
+              <button id="testBybitConnection" class="btn btn-secondary">Проверить соединение</button>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>AI API</h3>
+            <div class="setting-item">
+              <label for="aiProvider">Провайдер AI:</label>
+              <select id="aiProvider" name="aiProvider">
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="custom">Свой</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="aiApiKey">API Key:</label>
+              <input type="password" id="aiApiKey" name="aiApiKey" placeholder="Введите API Key">
+            </div>
+            <div class="setting-item">
+              <label for="aiEndpoint">Конечная точка (для своего провайдера):</label>
+              <input type="text" id="aiEndpoint" name="aiEndpoint" placeholder="https://api.example.com/v1">
+            </div>
+            <div class="setting-item">
+              <label for="aiModel">Модель:</label>
+              <input type="text" id="aiModel" name="aiModel" placeholder="gpt-4">
+            </div>
+            <div class="setting-item">
+              <button id="testAiConnection" class="btn btn-secondary">Проверить соединение</button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Настройки торговли -->
+        <div id="trading" class="settings-section hidden">
+          <h2>Настройки торговли</h2>
+          
+          <div class="settings-group">
+            <h3>Автоматическое исполнение</h3>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableAutoTrading" name="enableAutoTrading">
+              <label for="enableAutoTrading">Включить автоматическую торговлю</label>
+            </div>
+            <div class="setting-item">
+              <label for="defaultExchange">Биржа по умолчанию:</label>
+              <select id="defaultExchange" name="defaultExchange">
+                <option value="binance">Binance</option>
+                <option value="bybit">Bybit</option>
+              </select>
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="requireConfirmation" name="requireConfirmation" checked>
+              <label for="requireConfirmation">Требовать подтверждения перед исполнением</label>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Торговые пары</h3>
+            <div class="setting-item">
+              <label for="favoritePairs">Избранные пары (через запятую):</label>
+              <input type="text" id="favoritePairs" name="favoritePairs" placeholder="BTCUSDT, ETHUSDT, SOLUSDT">
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="onlyTradeFavorites" name="onlyTradeFavorites">
+              <label for="onlyTradeFavorites">Торговать только избранными парами</label>
+            </div>
+            <div class="setting-item">
+              <label for="defaultTimeframe">Таймфрейм по умолчанию:</label>
+              <select id="defaultTimeframe" name="defaultTimeframe">
+                <option value="1m">1 минута</option>
+                <option value="5m">5 минут</option>
+                <option value="15m">15 минут</option>
+                <option value="30m">30 минут</option>
+                <option value="1h">1 час</option>
+                <option value="4h">4 часа</option>
+                <option value="1d">1 день</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Исполнение ордеров</h3>
+            <div class="setting-item">
+              <label for="orderType">Тип ордера по умолчанию:</label>
+              <select id="orderType" name="orderType">
+                <option value="MARKET">Рыночный</option>
+                <option value="LIMIT">Лимитный</option>
+              </select>
+            </div>
+            <div class="setting-item">
+              <label for="defaultLeverage">Плечо по умолчанию:</label>
+              <input type="number" id="defaultLeverage" name="defaultLeverage" min="1" max="100" value="1">
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableTrailingStop" name="enableTrailingStop">
+              <label for="enableTrailingStop">Использовать трейлинг стоп</label>
+            </div>
+            <div class="setting-item">
+              <label for="trailingStopPercent">Процент для трейлинг стопа:</label>
+              <input type="number" id="trailingStopPercent" name="trailingStopPercent" min="0.1" max="10" step="0.1" value="1.0">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Настройки риск-менеджмента -->
+        <div id="risk" class="settings-section hidden">
+          <h2>Настройки риск-менеджмента</h2>
+          
+          <div class="settings-group">
+            <h3>Размер позиции</h3>
+            <div class="setting-item">
+              <label for="riskPerTrade">Риск на сделку (% от депозита):</label>
+              <input type="number" id="riskPerTrade" name="riskPerTrade" min="0.1" max="10" step="0.1" value="1.0">
+            </div>
+            <div class="setting-item">
+              <label for="maxPositionSize">Максимальный размер позиции (% от депозита):</label>
+              <input type="number" id="maxPositionSize" name="maxPositionSize" min="1" max="100" step="1" value="10">
+            </div>
+            <div class="setting-item">
+              <label for="maxSimultaneousTrades">Максимум одновременных сделок:</label>
+              <input type="number" id="maxSimultaneousTrades" name="maxSimultaneousTrades" min="1" max="20" step="1" value="3">
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Стоп-лосс и тейк-профит</h3>
+            <div class="setting-item">
+              <label for="defaultStopLoss">Стоп-лосс по умолчанию (%):</label>
+              <input type="number" id="defaultStopLoss" name="defaultStopLoss" min="0.5" max="10" step="0.1" value="2.0">
+            </div>
+            <div class="setting-item">
+              <label for="defaultTakeProfit">Тейк-профит по умолчанию (%):</label>
+              <input type="number" id="defaultTakeProfit" name="defaultTakeProfit" min="0.5" max="20" step="0.1" value="4.0">
+            </div>
+            <div class="setting-item">
+              <label for="riskRewardRatio">Целевое соотношение риск/доходность:</label>
+              <input type="number" id="riskRewardRatio" name="riskRewardRatio" min="1" max="5" step="0.1" value="2.0">
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Расширенные настройки риска</h3>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableCapitalBooster" name="enableCapitalBooster">
+              <label for="enableCapitalBooster">Включить разгон депозита</label>
+            </div>
+            <div class="setting-item">
+              <label for="boosterThreshold">Порог для увеличения размера (%):</label>
+              <input type="number" id="boosterThreshold" name="boosterThreshold" min="5" max="50" step="1" value="20">
+            </div>
+            <div class="setting-item">
+              <label for="boosterMultiplier">Множитель размера при разгоне:</label>
+              <input type="number" id="boosterMultiplier" name="boosterMultiplier" min="1.1" max="3" step="0.1" value="1.5">
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableDrawdownProtection" name="enableDrawdownProtection" checked>
+              <label for="enableDrawdownProtection">Защита от просадки</label>
+            </div>
+            <div class="setting-item">
+              <label for="maxDrawdown">Максимальная допустимая просадка (%):</label>
+              <input type="number" id="maxDrawdown" name="maxDrawdown" min="5" max="50" step="1" value="15">
+            </div>
+            <div class="setting-item">
+              <label for="drawdownAction">Действие при достижении макс. просадки:</label>
+              <select id="drawdownAction" name="drawdownAction">
+                <option value="reduce">Уменьшить размер позиции</option>
+                <option value="pause">Приостановить торговлю</option>
+                <option value="notify">Только уведомить</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Настройки аналитики -->
+        <div id="analytics" class="settings-section hidden">
+          <h2>Настройки аналитики</h2>
+          
+          <div class="settings-group">
+            <h3>Обновление данных</h3>
+            <div class="setting-item">
+              <label for="analyticsUpdateInterval">Интервал обновления аналитики (минуты):</label>
+              <input type="number" id="analyticsUpdateInterval" name="analyticsUpdateInterval" min="1" max="120" value="60">
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableBackgroundAnalytics" name="enableBackgroundAnalytics" checked>
+              <label for="enableBackgroundAnalytics">Фоновый анализ торговых результатов</label>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>AI Анализ</h3>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableAiAnalysis" name="enableAiAnalysis" checked>
+              <label for="enableAiAnalysis">Использовать AI для анализа графиков</label>
+            </div>
+            <div class="setting-item">
+              <label for="aiAnalysisInterval">Интервал AI анализа (минуты):</label>
+              <input type="number" id="aiAnalysisInterval" name="aiAnalysisInterval" min="1" max="60" value="5">
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="includeVolumeInAnalysis" name="includeVolumeInAnalysis" checked>
+              <label for="includeVolumeInAnalysis">Учитывать объем в анализе</label>
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="includeIndicatorsInAnalysis" name="includeIndicatorsInAnalysis" checked>
+              <label for="includeIndicatorsInAnalysis">Учитывать индикаторы в анализе</label>
+            </div>
+            <div class="setting-item">
+              <label for="priorityIndicators">Приоритетные индикаторы:</label>
+              <select id="priorityIndicators" name="priorityIndicators" multiple>
+                <option value="rsi">RSI</option>
+                <option value="macd">MACD</option>
+                <option value="bb">Bollinger Bands</option>
+                <option value="ma">Moving Averages</option>
+                <option value="ichimoku">Ichimoku Cloud</option>
+              </select>
+              <small>Удерживайте Ctrl для выбора нескольких</small>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Экспорт данных</h3>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableAutoExport" name="enableAutoExport">
+              <label for="enableAutoExport">Автоматический экспорт данных</label>
+            </div>
+            <div class="setting-item">
+              <label for="exportInterval">Интервал экспорта (часы):</label>
+              <input type="number" id="exportInterval" name="exportInterval" min="1" max="168" value="24">
+            </div>
+            <div class="setting-item">
+              <label for="exportFormat">Формат экспорта:</label>
+              <select id="exportFormat" name="exportFormat">
+                <option value="json">JSON</option>
+                <option value="csv">CSV</option>
+                <option value="excel">Excel</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Настройки уведомлений -->
+        <div id="notifications" class="settings-section hidden">
+          <h2>Настройки уведомлений</h2>
+          
+          <div class="settings-group">
+            <h3>Общие настройки</h3>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableNotifications" name="enableNotifications" checked>
+              <label for="enableNotifications">Включить уведомления</label>
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableBrowserNotifications" name="enableBrowserNotifications" checked>
+              <label for="enableBrowserNotifications">Уведомления в браузере</label>
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableSoundNotifications" name="enableSoundNotifications" checked>
+              <label for="enableSoundNotifications">Звуковые уведомления</label>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Типы уведомлений</h3>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="notifyOnSignal" name="notifyOnSignal" checked>
+              <label for="notifyOnSignal">Уведомлять о торговых сигналах</label>
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="notifyOnOrderExecution" name="notifyOnOrderExecution" checked>
+              <label for="notifyOnOrderExecution">Уведомлять об исполнении ордеров</label>
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="notifyOnPositionClose" name="notifyOnPositionClose" checked>
+              <label for="notifyOnPositionClose">Уведомлять о закрытии позиций</label>
+            </div>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="notifyOnDrawdown" name="notifyOnDrawdown" checked>
+              <label for="notifyOnDrawdown">Уведомлять о просадке</label>
+            </div>
+          </div>
+          
+          <div class="settings-group">
+            <h3>Интеграция с мессенджерами</h3>
+            <div class="setting-item checkbox">
+              <input type="checkbox" id="enableTelegramNotifications" name="enableTelegramNotifications">
+              <label for="enableTelegramNotifications">Уведомления в Telegram</label>
+            </div>
+            <div class="setting-item">
+              <label for="telegramBotToken">Токен Telegram бота:</label>
+              <input type="text" id="telegramBotToken" name="telegramBotToken" placeholder="123456789:ABCDEF...">
+            </div>
+            <div class="setting-item">
+              <label for="telegramChatId">ID чата Telegram:</label>
+              <input type="text" id="telegramChatId" name="telegramChatId" placeholder="12345678">
+            </div>
+            <div class="setting-item">
+              <button id="testTelegramNotification" class="btn btn-secondary">Проверить Telegram</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Расширенная аналитика торговли | Торговая платформа с AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="analytics-header">
+      <h1>Расширенная аналитика торговли</h1>
+      <div class="header-actions">
+        <a href="index.html" class="btn btn-secondary">Вернуться к торговле</a>
+        <button id="refreshData" class="btn btn-primary">Обновить данные</button>
+        <button id="exportData" class="btn btn-secondary">Экспорт данных</button>
+      </div>
+    </header>
+
+    <div id="loadingIndicator" class="loading-indicator hidden">
+      <div class="spinner"></div>
+      <p>Загрузка данных...</p>
+    </div>
+
+    <div id="errorMessage" class="error-message hidden"></div>
+
+    <section class="overall-metrics">
+      <h2>Общие метрики</h2>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Всего сделок</div>
+          <div id="totalTrades" class="metric-value">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Винрейт</div>
+          <div id="winRate" class="metric-value">0%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Общий профит</div>
+          <div id="totalProfit" class="metric-value">0%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Профит-фактор</div>
+          <div id="profitFactor" class="metric-value">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Макс. просадка</div>
+          <div id="maxDrawdown" class="metric-value">0%</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Sharpe Ratio</div>
+          <div id="sharpeRatio" class="metric-value">0</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="analytics-container">
+      <div class="analytics-filters">
+        <div class="filter-group">
+          <label for="pairSelector">Торговая пара:</label>
+          <select id="pairSelector">
+            <option value="all">Все пары</option>
+            <!-- Опции будут добавлены динамически -->
+          </select>
+        </div>
+      </div>
+
+      <div class="analytics-tabs">
+        <div class="analytics-tab active" data-section="capitalCurve">Кривая капитала</div>
+        <div class="analytics-tab" data-section="pairPerformance">Производительность пар</div>
+        <div class="analytics-tab" data-section="timeDistribution">Распределение по времени</div>
+        <div class="analytics-tab" data-section="recommendations">Рекомендации</div>
+        <div class="analytics-tab" data-section="dailyStats">Ежедневная статистика</div>
+		<div class="analytics-tab" data-section="riskReward">Риск/Доходность</div>
+      </div>
+
+      <div class="analytics-content">
+        <!-- Секция кривой капитала -->
+        <div id="capitalCurve" class="analytics-section">
+          <h3>Кривая капитала и просадки</h3>
+		  <div id="riskReward" class="analytics-section hidden">
+			<h3>Анализ соотношения риск/доходность с учетом плеча</h3>
+			<div class="metrics-grid risk-reward-metrics">
+    <div class="metric-card">
+      <div class="metric-title">Среднее соотношение риск/доходность</div>
+      <div id="avgRiskRewardRatio" class="metric-value">0</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title">Средний риск на сделку</div>
+      <div id="avgRiskPerTrade" class="metric-value">0%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title">Средняя потенц. доходность</div>
+      <div id="avgRewardPerTrade" class="metric-value">0%</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-title">Рекомендуемое макс. плечо</div>
+      <div id="recommendedMaxLeverage" class="metric-value">0x</div>
+    </div>
+  </div>
+  
+  <div class="row-container">
+    <div class="column">
+      <h4>Влияние плеча на риск</h4>
+      <div class="chart-container">
+        <canvas id="leverageImpactChart"></canvas>
+      </div>
+    </div>
+    <div class="column">
+      <h4>Вероятность потери депозита</h4>
+      <div class="chart-container">
+        <canvas id="riskOfRuinChart"></canvas>
+      </div>
+    </div>
+  </div>
+  
+  <h4>Таблица анализа торговли с разными уровнями плеча</h4>
+  <div class="table-container">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Плечо</th>
+          <th>Риск на сделку</th>
+          <th>Потенц. доходность</th>
+          <th>Вероятность потери</th>
+          <th>Рекомендация</th>
+        </tr>
+      </thead>
+      <tbody id="leverageTableBody">
+        <!-- Данные будут добавлены динамически -->
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="section-description">
+    <p>Анализ показывает, как увеличивается риск и потенциальная доходность при использовании различных уровней плеча.</p>
+    <p>Вероятность потери депозита рассчитывается на основе исторической производительности вашей торговой стратегии.</p>
+    <p>Рекомендуемое максимальное плечо основано на настройках максимально допустимой просадки (по умолчанию 20%).</p>
+  </div>
+</div>
+  
+          <div class="chart-container">
+            <canvas id="capitalCurveChart"></canvas>
+          </div>
+          <div class="section-description">
+            <p>График показывает изменение капитала (синяя линия) и просадку в процентах (красная линия) с течением времени.</p>
+            <p>Максимальная просадка: <span id="maxDrawdownValue">0%</span></p>
+          </div>
+        </div>
+
+        <!-- Секция производительности пар -->
+        <div id="pairPerformance" class="analytics-section hidden">
+          <h3>Производительность торговых пар</h3>
+          <div class="chart-container">
+            <canvas id="pairPerformanceChart"></canvas>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Пара</th>
+                  <th>Сделок</th>
+                  <th>Винрейт</th>
+                  <th>Ср. профит</th>
+                  <th>Общий профит</th>
+                  <th>Макс. профит</th>
+                  <th>Макс. убыток</th>
+                  <th>Профит-фактор</th>
+                  <th>Ср. длительность</th>
+                </tr>
+              </thead>
+              <tbody id="pairTableBody">
+                <!-- Данные будут добавлены динамически -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Секция распределения по времени -->
+        <div id="timeDistribution" class="analytics-section hidden">
+          <h3>Распределение результатов по времени</h3>
+          <div class="chart-container">
+            <canvas id="timeDistributionChart"></canvas>
+          </div>
+          <div class="heatmap-container">
+            <h4>Тепловая карта результатов по часам (UTC)</h4>
+            <div id="timeHeatmap"></div>
+          </div>
+          <div class="section-description">
+            <p>График и тепловая карта показывают распределение сделок и их результативность по времени суток (UTC).</p>
+            <p>Зеленый цвет означает положительный результат, красный - отрицательный. Интенсивность цвета соответствует величине результата.</p>
+          </div>
+        </div>
+
+        <!-- Секция рекомендаций -->
+        <div id="recommendations" class="analytics-section hidden">
+          <h3>Рекомендации для улучшения результатов</h3>
+          
+          <div class="recommendations-group">
+            <h4>Рекомендуемые торговые пары</h4>
+            <div id="recommendedPairs" class="recommendations-cards">
+              <!-- Данные будут добавлены динамически -->
+            </div>
+          </div>
+          
+          <div class="recommendations-group">
+            <h4>Оптимальное время для торговли</h4>
+            <div id="recommendedTimeSlots" class="recommendations-cards">
+              <!-- Данные будут добавлены динамически -->
+            </div>
+          </div>
+          
+          <div class="section-description">
+            <p>Рекомендации формируются на основе статистического анализа ваших торговых результатов.</p>
+            <p>Используйте эти рекомендации для корректировки вашей торговой стратегии.</p>
+          </div>
+        </div>
+
+        <!-- Секция ежедневной статистики -->
+        <div id="dailyStats" class="analytics-section hidden">
+          <h3>Ежедневная статистика торговли</h3>
+          <div class="table-container" id="dailyStatsTable">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Сделок</th>
+                  <th>Выигрышей</th>
+                  <th>Проигрышей</th>
+                  <th>Винрейт</th>
+                  <th>Профит</th>
+                  <th>Профит-фактор</th>
+                </tr>
+              </thead>
+              <tbody id="dailyStatsTableBody">
+                <!-- Данные будут добавлены динамически -->
+              </tbody>
+            </table>
+          </div>
+          <div class="section-description">
+            <p>Таблица показывает статистику торговых результатов по дням за последние 30 дней.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="analytics.js"></script>
+</body>
+</html>

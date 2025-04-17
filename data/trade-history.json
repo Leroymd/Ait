@@ -1,0 +1,20 @@
+[
+  {
+    "id": "example-1",
+    "symbol": "BTCUSDT",
+    "direction": "LONG",
+    "openPrice": 62150.5,
+    "closePrice": 63487.2,
+    "amount": 0.05,
+    "openTime": "2025-04-08T08:15:30.000Z",
+    "closeTime": "2025-04-08T12:45:12.000Z",
+    "profit": 3.5,
+    "stopLoss": 61350.1,
+    "takeProfit": 63950.3,
+    "orderType": "MARKET",
+    "status": "CLOSED",
+    "fees": 0.12,
+    "source": "AI_SIGNAL",
+    "isExample": true
+  }
+]

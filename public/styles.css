@@ -1,0 +1,472 @@
+/* Стили для торговой платформы */
+
+/* Общие стили и переменные */
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --accent-color: #f39c12;
+  --danger-color: #e74c3c;
+  --dark-color: #2c3e50;
+  --light-color: #ecf0f1;
+  --border-color: #ddd;
+  --success-color: #27ae60;
+  --warning-color: #f1c40f;
+  --info-color: #3498db;
+  --positive-color: #2ecc71;
+  --negative-color: #e74c3c;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.positive {
+  color: var(--positive-color) !important;
+}
+
+.negative {
+  color: var(--negative-color) !important;
+}
+
+.no-data {
+  text-align: center;
+  padding: 20px;
+  color: #999;
+  font-style: italic;
+}
+
+/* Основной макет */
+.sidebar {
+  background-color: #fff;
+  border-right: 1px solid var(--border-color);
+  min-height: 100vh;
+}
+
+.main-content {
+  padding: 15px;
+}
+
+/* Обновленная навигация в виде кнопок */
+.main-nav {
+  background-color: var(--dark-color);
+  display: flex;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.main-nav a {
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  background-color: rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.main-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.main-nav a.active {
+  background-color: var(--primary-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* График */
+.chart-container {
+  width: 100%;
+  height: 500px;
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* Индикатор загрузки */
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  border-top-color: var(--primary-color);
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Сообщения */
+.error-message {
+  background-color: #ffebee;
+  color: var(--danger-color);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.success-message {
+  background-color: #e8f5e9;
+  color: var(--success-color);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Карточки и блоки */
+.card {
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid var(--border-color);
+  padding: 12px 15px;
+}
+
+/* Таблицы */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.data-table th,
+.data-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.data-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+/* Метрики и статистика */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.metric-card {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+.metric-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+/* Стили для вкладок (совместимы с Bootstrap) */
+.analytics-tabs {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.analytics-tab {
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px 4px 0 0;
+  font-weight: 500;
+}
+
+.analytics-tab.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.analytics-tab:not(.active):hover {
+  background-color: #eee;
+}
+
+/* Дополнительные стили для секций аналитики */
+.analytics-section {
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.section-description {
+  margin-top: 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Стили для настроек */
+.settings-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settings-section {
+  margin-bottom: 20px;
+}
+
+.settings-group {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-group:last-child {
+  border-bottom: none;
+}
+
+.setting-item {
+  margin-bottom: 15px;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.checkbox-group {
+  margin-bottom: 8px;
+}
+
+/* Стили для управления позициями */
+.positions-summary {
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.summary-value {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+/* Кнопки */
+.btn {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  margin-right: 5px;
+}
+
+.btn:last-child {
+  margin-right: 0;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #7f8c8d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #219653;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Модальные окна */
+.modal-content {
+  border-radius: 8px;
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.close-modal {
+  font-size: 24px;
+  font-weight: bold;
+  color: #999;
+  cursor: pointer;
+}
+
+.close-modal:hover {
+  color: #333;
+}
+
+/* Заголовки страниц */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.page-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Адаптивные стили */
+@media (max-width: 768px) {
+  .main-nav {
+    padding: 10px;
+  }
+  
+  .main-nav a {
+    min-width: 100px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .positions-summary {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-nav a {
+    min-width: 80px;
+    padding: 5px 10px;
+    font-size: 13px;
+    flex-grow: 1;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .section-actions {
+    width: 100%;
+  }
+  
+  .btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
